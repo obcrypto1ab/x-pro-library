@@ -337,7 +337,11 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { 
+  getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy, serverTimestamp, where
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
 
     // 1) Firebase
     const firebaseConfig = {
@@ -923,4 +927,5 @@
   </script>
 </body>
 </html>
+
 
