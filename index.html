@@ -381,19 +381,6 @@ const imagekit = new window.ImageKit({
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
 
-        // Initialize ImageKit
-  
-
-  authenticator: async () => {
-    const res = await fetch("https://x-pro-library.vercel.app/api/imagekit-auth", {
-      method: "GET",
-      cache: "no-store",
-    });
-    const data = await res.json();
-    return { token: data.token, expire: data.expire, signature: data.signature };
-  }
-});
-
 
         // ==========================================
         // STATE & VARIABLES
@@ -902,6 +889,7 @@ const imagekit = new window.ImageKit({
 </body>
 
 </html>
+
 
 
 
