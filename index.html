@@ -367,13 +367,7 @@ const IK_AUTH_ENDPOINT = "/api/imagekit-auth";
 // Initialize ImageKit (use authenticator - most reliable)
 const imagekit = new window.ImageKit({
   publicKey: IK_PUBLIC_KEY,
-  urlEndpoint: IK_URL_ENDPOINT,
-  authenticator: async () => {
-    const res = await fetch(IK_AUTH_ENDPOINT, { cache: "no-store" });
-    if (!res.ok) throw new Error("Auth endpoint failed: " + res.status);
-    const data = await res.json();
-    return { token: data.token, expire: data.expire, signature: data.signature };
-  },
+  urlEndpoint: IK_URL_ENDPOINT
 });
 
         // Initialize Firebase
@@ -805,34 +799,47 @@ const imagekit = new window.ImageKit({
                 }
                 app.openModal('editor');
             },
-            handleImagePreview: async (e) => {
-                const file = e.target.files[0];
-                if(file) {
-                    // Upload to ImageKit immediately upon selection
-                    showToast('Uploading image...', 'info');
-                    try {
-                        const res = await new Promise((resolve, reject) => {
-                            imagekit.upload({
-                                file: file,
-                                fileName: "xpro_" + Date.now(),
-                                tags: ["xpro-library"]
-                            }, (err, result) => {
-                                if(err) reject(err);
-                                else resolve(result);
-                            });
-                        });
-                        
-                        document.querySelector('input[name="imageUrl"]').value = res.url;
-                        const prev = document.getElementById('img-preview');
-                        prev.classList.remove('hidden');
-                        prev.style.backgroundImage = `url(${res.url})`;
-                        showToast('Image uploaded!');
-                    } catch (err) {
-                        console.error(err);
-                        showToast('Image upload failed', 'error');
-                    }
-                }
-            },
+           handleImagePreview: async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  showToast("Uploading image...", "info");
+
+  try {
+    // 1) auth data নাও (token/signature/expire)
+    const authRes = await fetch("/api/imagekit-auth", { cache: "no-store" });
+    if (!authRes.ok) throw new Error("Auth failed: " + authRes.status);
+    const authData = await authRes.json();
+
+    // 2) upload করো (token/signature/expire pass করে)
+    const result = await new Promise((resolve, reject) => {
+      imagekit.upload(
+        {
+          file, // browser File object
+          fileName: "xpro_" + Date.now(),
+          tags: ["xpro-library"],
+
+          token: authData.token,
+          signature: authData.signature,
+          expire: authData.expire,
+        },
+        (err, res) => (err ? reject(err) : resolve(res))
+      );
+    });
+
+    document.querySelector('input[name="imageUrl"]').value = result.url;
+
+    const prev = document.getElementById("img-preview");
+    prev.classList.remove("hidden");
+    prev.style.backgroundImage = `url(${result.url})`;
+
+    showToast("Image uploaded!");
+  } catch (err) {
+    console.error("Image upload error:", err);
+    showToast("Image upload failed: " + (err?.message || "unknown"), "error");
+  }
+},
+
             savePost: async (e) => {
                 e.preventDefault();
                 const f = e.target;
@@ -889,6 +896,7 @@ const imagekit = new window.ImageKit({
 </body>
 
 </html>
+
 
 
 
