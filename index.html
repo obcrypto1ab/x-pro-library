@@ -557,15 +557,35 @@
         };
       },
 
-      listenPosts: () => {
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-        onSnapshot(q, (snapshot) => {
-          state.posts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-          app.extractCategories();
-          app.renderGrid();
-          if (state.isAdmin) app.renderAdminTable();
-        });
-      },
+     listenPosts: () => {
+  // Admin হলে সব পোস্ট, না হলে শুধু published পোস্ট
+  let q;
+
+  if (state.isAdmin) {
+    q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+  } else {
+    q = query(
+      collection(db, "posts"),
+      where("published", "==", true),
+      orderBy("createdAt", "desc")
+    );
+  }
+
+  onSnapshot(
+    q,
+    (snapshot) => {
+      state.posts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      app.extractCategories();
+      app.renderGrid();
+      if (state.isAdmin) app.renderAdminTable();
+    },
+    (err) => {
+      console.error("Posts listener error:", err);
+      showToast("Failed to load posts: " + err.code, "error");
+    }
+  );
+},
+
 
       extractCategories: () => {
         state.categories = new Set(state.posts.map((p) => p.category).filter(Boolean));
@@ -903,3 +923,4 @@
   </script>
 </body>
 </html>
+
