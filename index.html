@@ -359,10 +359,22 @@
 };
 
         // 2. ImageKit Config (Public only)
-     const IK_PUBLIC_KEY = "public_yRB2dktvG7CXL9J/UNiO8v7Aolg=";
+    // 2) ImageKit Config
+const IK_PUBLIC_KEY = "public_yRB2dktvG7CXL9J/UNiO8v7Aolg=";
 const IK_URL_ENDPOINT = "https://ik.imagekit.io/cgdkn8ki9";
-const IK_AUTH_ENDPOINT = "https://x-pro-library.vercel.app/api/imagekit-auth";
+const IK_AUTH_ENDPOINT = "/api/imagekit-auth";
 
+// Initialize ImageKit (use authenticator - most reliable)
+const imagekit = new window.ImageKit({
+  publicKey: IK_PUBLIC_KEY,
+  urlEndpoint: IK_URL_ENDPOINT,
+  authenticator: async () => {
+    const res = await fetch(IK_AUTH_ENDPOINT, { cache: "no-store" });
+    if (!res.ok) throw new Error("Auth endpoint failed: " + res.status);
+    const data = await res.json();
+    return { token: data.token, expire: data.expire, signature: data.signature };
+  },
+});
 
         // Initialize Firebase
         const fbApp = initializeApp(firebaseConfig);
@@ -370,9 +382,7 @@ const IK_AUTH_ENDPOINT = "https://x-pro-library.vercel.app/api/imagekit-auth";
         const db = getFirestore(fbApp);
 
         // Initialize ImageKit
-       const imagekit = new window.ImageKit({
-  publicKey: "public_yRB2dktvG7CXL9J/UNiO8v7Aolg=",
-  urlEndpoint: "https://ik.imagekit.io/cgdkn8ki9",
+  
 
   authenticator: async () => {
     const res = await fetch("https://x-pro-library.vercel.app/api/imagekit-auth", {
@@ -892,6 +902,7 @@ const IK_AUTH_ENDPOINT = "https://x-pro-library.vercel.app/api/imagekit-auth";
 </body>
 
 </html>
+
 
 
 
