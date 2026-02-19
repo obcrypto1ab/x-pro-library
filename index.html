@@ -46,7 +46,7 @@
   </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white transition-colors duration-300 font-sans">
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white transition-colors duration-300 font-sans flex flex-col min-h-screen">
   <!-- Toast Container -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
 
@@ -144,7 +144,7 @@
   </div>
 
   <!-- Main Content -->
-  <main id="public-view" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
+  <main id="public-view" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-1 w-full">
     <div class="text-center mb-12 animate-fade-in">
       <h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
         Discover Excellence
@@ -173,7 +173,7 @@
           </select>
         </div>
 
-        <!-- X Score Filters (Hidden by default, shown only for X Score type) -->
+        <!-- X Score Filters -->
         <div id="xscore-filter-row" class="hidden flex flex-wrap justify-center gap-2">
           <button onclick="app.setFilter('xScoreRange', 'all')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs font-semibold active-score" data-val="all">Any Score</button>
           <button onclick="app.setFilter('xScoreRange', '100-200')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="100-200">100-200</button>
@@ -185,6 +185,7 @@
     </div>
 
     <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Skeletons -->
       <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
       <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
       <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
@@ -195,6 +196,15 @@
       <p class="text-xl text-slate-500">No results found.</p>
     </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="w-full py-8 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        Build By <a href="https://x.com/ai_elon_musk_" target="_blank" class="font-bold text-blue-600 hover:text-blue-700 hover:underline transition">CryptoAI_Insider</a>
+      </p>
+    </div>
+  </footer>
 
   <!-- Post Details Modal -->
   <div id="post-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -208,7 +218,6 @@
           <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6 pt-20">
             <div class="flex items-center gap-3 mb-2">
               <span id="modal-type" class="px-2 py-0.5 rounded text-xs uppercase font-bold tracking-wider bg-white text-black"></span>
-              <!-- Score Badge will be handled by JS -->
               <span id="modal-score-container" class="hidden px-2 py-0.5 rounded text-xs font-bold bg-yellow-500 text-black"></span>
             </div>
             <h2 id="modal-title" class="text-3xl font-bold text-white"></h2>
@@ -218,6 +227,9 @@
           <div class="flex flex-wrap gap-2 mb-6" id="modal-tags"></div>
           <p id="modal-desc" class="text-lg text-slate-600 dark:text-slate-300 font-medium mb-6 leading-relaxed"></p>
           <div id="modal-content" class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-400 mb-8 whitespace-pre-wrap"></div>
+
+          <!-- Social Buttons Row -->
+          <div id="modal-social-row" class="flex flex-wrap gap-3 mb-4 empty:hidden"></div>
 
           <div class="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
             <a id="modal-link" href="#" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-500/20">
@@ -280,13 +292,13 @@
               </select>
             </div>
             
-            <!-- Standard Score (Hidden for X Score) -->
+            <!-- Standard Score -->
             <div id="field-std-score">
               <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Score (Optional 0-100)</label>
               <input type="number" name="score" min="0" max="100" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 text-slate-500" placeholder="Ignored for X Score" />
             </div>
 
-            <!-- X Score (Shown only for X Score) -->
+            <!-- X Score -->
             <div id="field-xscore" class="hidden">
               <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X Score (100-1000)</label>
               <input type="number" name="xScore" min="0" max="1000" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
@@ -321,9 +333,31 @@
             <textarea name="content" rows="6" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-sm"></textarea>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">External Link</label>
-            <input type="url" name="socialLink" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+          <!-- Social Links Section -->
+          <div class="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
+            <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Links</h4>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">External / Main Link</label>
+                <input type="url" name="socialLink" placeholder="https://" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X (Twitter)</label>
+                  <input type="text" name="xLink" placeholder="https://x.com/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Discord</label>
+                  <input type="text" name="discordLink" placeholder="https://discord.gg/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Telegram</label>
+                  <input type="text" name="telegramLink" placeholder="https://t.me/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -391,7 +425,6 @@
         allowedAdminEmail: "",
       },
       posts: [],
-      // xScoreRange added, scoreRange removed/ignored
       filters: { search: "", type: "all", category: "all", xScoreRange: "all" },
       categories: new Set(),
     };
@@ -584,7 +617,6 @@
 
       listenPosts: () => {
         let q;
-        // Keep existing logic: Admin sees all, Public sees published
         if (state.isAdmin) {
           q = query(collection(db, "posts"));
         } else {
@@ -628,7 +660,6 @@
       setFilter: (key, val) => {
         state.filters[key] = val;
 
-        // Handle Type Tabs
         if (key === "type") {
           els.filters.typeBtns.forEach((b) => {
             const active = b.dataset.val === val;
@@ -637,7 +668,6 @@
             b.classList.toggle("text-blue-600", active);
           });
 
-          // Show/Hide X Score filter row
           if (val === 'xscore') {
             els.filters.xScoreRow.classList.remove("hidden");
           } else {
@@ -645,7 +675,6 @@
           }
         }
 
-        // Handle X Score Range Buttons
         if (key === "xScoreRange") {
           els.filters.xScoreBtns.forEach((b) => {
             const active = b.dataset.val === val;
@@ -666,27 +695,20 @@
           const title = (p.title || "");
           const desc = (p.description || "");
 
-          // Search
           if (state.filters.search) {
             const term = state.filters.search.toLowerCase();
             const match = (title + " " + desc + " " + tagsText).toLowerCase();
             if (!match.includes(term)) return false;
           }
 
-          // Type
           if (state.filters.type !== "all" && p.type !== state.filters.type) return false;
-          
-          // Category
           if (state.filters.category !== "all" && p.category !== state.filters.category) return false;
 
-          // X Score filtering (Only if type is xscore)
           if (state.filters.type === "xscore" && state.filters.xScoreRange !== "all") {
             const xVal = Number(p.xScore || 0);
             const [min, max] = state.filters.xScoreRange.split("-").map(Number);
             if (xVal < min || xVal > max) return false;
           }
-
-          // Existing score filters removed for Alpha/Tools as requested
 
           return true;
         });
@@ -707,19 +729,25 @@
           card.className =
             "bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 dark:border-slate-800 group flex flex-col h-full";
 
-          // Badge logic
           let badgeColor = "bg-gray-100 text-gray-700";
           if (p.type === "alpha") badgeColor = "bg-purple-100 text-purple-700";
           else if (p.type === "tool") badgeColor = "bg-blue-100 text-blue-700";
           else if (p.type === "xscore") badgeColor = "bg-indigo-100 text-indigo-700";
 
-          // Score Badge Logic: Only show for X Score type
           let scoreBadgeHTML = "";
           if (p.type === "xscore") {
             const xVal = Number(p.xScore || 0);
             const sColor = xVal >= 800 ? "bg-green-100 text-green-700" : xVal >= 400 ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700";
             scoreBadgeHTML = `<span class="px-2 py-1 rounded-md text-xs font-bold ${sColor}">${xVal}</span>`;
           }
+
+          // Small Social Icons for Card
+          let socialIcons = "";
+          if (p.xLink) socialIcons += `<a href="${p.xLink}" target="_blank" class="text-slate-400 hover:text-black dark:hover:text-white" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>`;
+          if (p.discordLink) socialIcons += `<a href="${p.discordLink}" target="_blank" class="text-slate-400 hover:text-indigo-500" title="Discord"><i class="fa-brands fa-discord"></i></a>`;
+          if (p.telegramLink) socialIcons += `<a href="${p.telegramLink}" target="_blank" class="text-slate-400 hover:text-sky-500" title="Telegram"><i class="fa-brands fa-telegram"></i></a>`;
+          
+          if(socialIcons) socialIcons = `<div class="flex gap-3 ml-2 border-l border-slate-200 dark:border-slate-700 pl-3">${socialIcons}</div>`;
 
           const img = p.imageUrl || "https://via.placeholder.com/400x300?text=No+Image";
           const tags = Array.isArray(p.tags) ? p.tags : [];
@@ -741,10 +769,13 @@
               <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition cursor-pointer" onclick="app.openPostDetails('${p.id}')">${p.title || ""}</h3>
               <p class="text-slate-500 text-sm line-clamp-3 mb-4 flex-1">${p.description || ""}</p>
               <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <div class="flex gap-2 overflow-hidden w-2/3">
-                  ${tags.slice(0, 2).map((t) => `<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-500">#${t}</span>`).join("")}
+                <div class="flex items-center flex-1 overflow-hidden">
+                   <div class="flex gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                     ${tags.slice(0, 2).map((t) => `<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-500">#${t}</span>`).join("")}
+                   </div>
+                   ${socialIcons}
                 </div>
-                <button onclick="app.openPostDetails('${p.id}')" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">View <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                <button onclick="app.openPostDetails('${p.id}')" class="text-blue-600 hover:text-blue-700 text-sm font-semibold ml-2 whitespace-nowrap">View <i class="fa-solid fa-arrow-right ml-1"></i></button>
               </div>
             </div>
           `;
@@ -772,7 +803,6 @@
         m.querySelector("#modal-content").innerText = p.content || "";
         m.querySelector("#modal-type").innerText = p.type || "Post";
 
-        // Score logic for modal
         const scoreContainer = m.querySelector("#modal-score-container");
         if (p.type === "xscore") {
           scoreContainer.classList.remove("hidden");
@@ -787,6 +817,29 @@
           .map((t) => `<span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs font-bold text-slate-600 dark:text-slate-300">#${t}</span>`)
           .join("");
 
+        // Social Buttons Logic (X, Discord, Telegram)
+        const socialRow = m.querySelector("#modal-social-row");
+        socialRow.innerHTML = "";
+        
+        const createSocialBtn = (link, iconClass, label, colorClass) => {
+          return `
+            <a href="${link}" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm ${colorClass}">
+              <i class="${iconClass}"></i> ${label}
+            </a>
+          `;
+        };
+
+        if (p.xLink) {
+          socialRow.innerHTML += createSocialBtn(p.xLink, "fa-brands fa-x-twitter", "X", "bg-black text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-slate-200");
+        }
+        if (p.discordLink) {
+          socialRow.innerHTML += createSocialBtn(p.discordLink, "fa-brands fa-discord", "Discord", "bg-[#5865F2] text-white hover:opacity-90");
+        }
+        if (p.telegramLink) {
+          socialRow.innerHTML += createSocialBtn(p.telegramLink, "fa-brands fa-telegram", "Telegram", "bg-[#0088cc] text-white hover:opacity-90");
+        }
+
+        // External Link Button (Original)
         const linkBtn = m.querySelector("#modal-link");
         if (p.socialLink) {
           linkBtn.href = p.socialLink;
@@ -863,7 +916,6 @@
         document.getElementById("delete-btn").classList.add("hidden");
         document.getElementById("editor-title").innerText = "Create New Post";
 
-        // Reset visibility based on default 'alpha'
         els.editor.stdScore.classList.remove("hidden");
         els.editor.xScore.classList.add("hidden");
 
@@ -880,6 +932,12 @@
             form.xScore.value = p.xScore || "";
             form.category.value = p.category || "";
             form.socialLink.value = p.socialLink || "";
+            
+            // New Social Links
+            form.xLink.value = p.xLink || "";
+            form.discordLink.value = p.discordLink || "";
+            form.telegramLink.value = p.telegramLink || "";
+
             form.tags.value = (Array.isArray(p.tags) ? p.tags : []).join(", ");
             form.published.checked = !!p.published;
             form.imageUrl.value = p.imageUrl || "";
@@ -894,9 +952,7 @@
           }
         }
         
-        // Trigger visibility update based on loaded type
         app.handleEditorTypeChange();
-
         app.openModal("editor");
       },
 
@@ -952,6 +1008,22 @@
         const f = e.target;
         const id = f.id.value;
 
+        // Validation for new social links
+        const validateLink = (url, name) => {
+          if (url && !/^https?:\/\//i.test(url)) {
+            throw new Error(`Invalid URL for ${name}. Must start with http:// or https://`);
+          }
+        };
+
+        try {
+          validateLink(f.xLink.value, "X Link");
+          validateLink(f.discordLink.value, "Discord Link");
+          validateLink(f.telegramLink.value, "Telegram Link");
+          validateLink(f.socialLink.value, "External Link");
+        } catch (err) {
+          return showToast(err.message, "error");
+        }
+
         const data = {
           type: f.type.value,
           title: f.title.value,
@@ -960,7 +1032,12 @@
           score: f.score.value ? Number(f.score.value) : null,
           xScore: f.xScore.value ? Number(f.xScore.value) : null,
           category: f.category.value,
+          
           socialLink: f.socialLink.value,
+          xLink: f.xLink.value,
+          discordLink: f.discordLink.value,
+          telegramLink: f.telegramLink.value,
+
           tags: f.tags.value.split(",").map((t) => t.trim()).filter(Boolean),
           published: f.published.checked,
           imageUrl: f.imageUrl.value,
