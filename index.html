@@ -165,6 +165,7 @@
             <button onclick="app.setFilter('type', 'all')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition active-filter" data-val="all">All</button>
             <button onclick="app.setFilter('type', 'alpha')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="alpha">Alpha</button>
             <button onclick="app.setFilter('type', 'tool')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="tool">AI Tools</button>
+            <button onclick="app.setFilter('type', 'xscore')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="xscore">X Score</button>
           </div>
 
           <select id="category-filter" onchange="app.setFilter('category', this.value)" class="p-2 pr-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500">
@@ -172,12 +173,13 @@
           </select>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-2">
-          <button onclick="app.setFilter('score', 'all')" class="filter-score-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs font-semibold active-score" data-val="all">Any Score</button>
-          <button onclick="app.setFilter('score', '81-100')" class="filter-score-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="81-100">81-100</button>
-          <button onclick="app.setFilter('score', '61-80')" class="filter-score-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="61-80">61-80</button>
-          <button onclick="app.setFilter('score', '41-60')" class="filter-score-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="41-60">41-60</button>
-          <button onclick="app.setFilter('score', '0-40')" class="filter-score-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="0-40">0-40</button>
+        <!-- X Score Filters (Hidden by default, shown only for X Score type) -->
+        <div id="xscore-filter-row" class="hidden flex flex-wrap justify-center gap-2">
+          <button onclick="app.setFilter('xScoreRange', 'all')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs font-semibold active-score" data-val="all">Any Score</button>
+          <button onclick="app.setFilter('xScoreRange', '100-200')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="100-200">100-200</button>
+          <button onclick="app.setFilter('xScoreRange', '200-400')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="200-400">200-400</button>
+          <button onclick="app.setFilter('xScoreRange', '400-800')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="400-800">400-800</button>
+          <button onclick="app.setFilter('xScoreRange', '800-1000')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="800-1000">800-1000</button>
         </div>
       </div>
     </div>
@@ -206,7 +208,8 @@
           <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6 pt-20">
             <div class="flex items-center gap-3 mb-2">
               <span id="modal-type" class="px-2 py-0.5 rounded text-xs uppercase font-bold tracking-wider bg-white text-black"></span>
-              <span id="modal-score" class="px-2 py-0.5 rounded text-xs font-bold bg-yellow-500 text-black"></span>
+              <!-- Score Badge will be handled by JS -->
+              <span id="modal-score-container" class="hidden px-2 py-0.5 rounded text-xs font-bold bg-yellow-500 text-black"></span>
             </div>
             <h2 id="modal-title" class="text-3xl font-bold text-white"></h2>
           </div>
@@ -270,14 +273,23 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Type</label>
-              <select name="type" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700">
+              <select name="type" id="editor-type-select" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700">
                 <option value="alpha">Alpha Post</option>
                 <option value="tool">AI Tool</option>
+                <option value="xscore">X Score</option>
               </select>
             </div>
-            <div>
-              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Score (0-100)</label>
-              <input type="number" name="score" min="0" max="100" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+            
+            <!-- Standard Score (Hidden for X Score) -->
+            <div id="field-std-score">
+              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Score (Optional 0-100)</label>
+              <input type="number" name="score" min="0" max="100" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 text-slate-500" placeholder="Ignored for X Score" />
+            </div>
+
+            <!-- X Score (Shown only for X Score) -->
+            <div id="field-xscore" class="hidden">
+              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X Score (100-1000)</label>
+              <input type="number" name="xScore" min="0" max="1000" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
             </div>
           </div>
 
@@ -338,10 +350,9 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
     import { 
-  getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, serverTimestamp, where
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
+      getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc,
+      onSnapshot, query, orderBy, serverTimestamp, where
+    } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     // 1) Firebase
     const firebaseConfig = {
@@ -380,7 +391,8 @@
         allowedAdminEmail: "",
       },
       posts: [],
-      filters: { search: "", type: "all", category: "all", scoreRange: "all" },
+      // xScoreRange added, scoreRange removed/ignored
+      filters: { search: "", type: "all", category: "all", xScoreRange: "all" },
       categories: new Set(),
     };
 
@@ -396,7 +408,8 @@
       },
       filters: {
         typeBtns: document.querySelectorAll(".filter-type-btn"),
-        scoreBtns: document.querySelectorAll(".filter-score-btn"),
+        xScoreBtns: document.querySelectorAll(".filter-xscore-btn"),
+        xScoreRow: document.getElementById("xscore-filter-row"),
         category: document.getElementById("category-filter"),
         searchGlobal: document.getElementById("global-search"),
         searchMobile: document.getElementById("mobile-search"),
@@ -412,6 +425,11 @@
         },
       },
       catList: document.getElementById("cat-list"),
+      editor: {
+        typeSelect: document.getElementById("editor-type-select"),
+        stdScore: document.getElementById("field-std-score"),
+        xScore: document.getElementById("field-xscore"),
+      }
     };
 
     // Helpers
@@ -455,6 +473,9 @@
         document.getElementById("post-form").onsubmit = app.savePost;
         document.getElementById("delete-btn").onclick = app.deletePost;
         document.getElementById("img-upload").onchange = app.handleImagePreview;
+
+        // Editor Type Change Listener
+        els.editor.typeSelect.onchange = app.handleEditorTypeChange;
 
         els.filters.searchGlobal.oninput = debounce((e) => app.setFilter("search", e.target.value), 300);
         els.filters.searchMobile.oninput = debounce((e) => app.setFilter("search", e.target.value), 300);
@@ -561,60 +582,53 @@
         };
       },
 
-  listenPosts: () => {
-  let q;
+      listenPosts: () => {
+        let q;
+        // Keep existing logic: Admin sees all, Public sees published
+        if (state.isAdmin) {
+          q = query(collection(db, "posts"));
+        } else {
+          q = query(
+            collection(db, "posts"),
+            where("published", "==", true)
+          );
+        }
 
-  if (state.isAdmin) {
-    q = query(collection(db, "posts"));
-  } else {
-    q = query(
-      collection(db, "posts"),
-      where("published", "==", true)
-    );
-  }
+        onSnapshot(
+          q,
+          (snapshot) => {
+            state.posts = snapshot.docs
+              .map(d => ({ id: d.id, ...d.data() }))
+              .sort((a, b) => {
+                const ta = a.createdAt?.seconds || 0;
+                const tb = b.createdAt?.seconds || 0;
+                return tb - ta; 
+              });
 
-  onSnapshot(
-    q,
-    (snapshot) => {
-      state.posts = snapshot.docs
-        .map(d => ({ id: d.id, ...d.data() }))
-        .sort((a, b) => {
-          const ta = a.createdAt?.seconds || 0;
-          const tb = b.createdAt?.seconds || 0;
-          return tb - ta; // নতুন পোস্ট আগে দেখাবে
-        });
-
-      app.extractCategories();
-      app.renderGrid();
-      if (state.isAdmin) app.renderAdminTable();
-    },
-    (err) => {
-      console.error("Posts listener error:", err);
-      showToast("Failed to load posts: " + err.message, "error");
-    }
-  );
-},
-
-
+            app.extractCategories();
+            app.renderGrid();
+            if (state.isAdmin) app.renderAdminTable();
+          },
+          (err) => {
+            console.error("Posts listener error:", err);
+            showToast("Failed to load posts: " + err.message, "error");
+          }
+        );
+      },
 
       extractCategories: () => {
         state.categories = new Set(state.posts.map((p) => p.category).filter(Boolean));
-
-        // select
         els.filters.category.innerHTML = '<option value="all">All Categories</option>';
         state.categories.forEach((c) => {
           els.filters.category.innerHTML += `<option value="${c}">${c}</option>`;
         });
-
-        // datalist (fixed: real datalist element)
         els.catList.innerHTML = [...state.categories].map((c) => `<option value="${c}"></option>`).join("");
       },
 
       setFilter: (key, val) => {
-        // ✅ fix score key mismatch
-        if (key === "score") key = "scoreRange";
         state.filters[key] = val;
 
+        // Handle Type Tabs
         if (key === "type") {
           els.filters.typeBtns.forEach((b) => {
             const active = b.dataset.val === val;
@@ -622,10 +636,18 @@
             b.classList.toggle("shadow-sm", active);
             b.classList.toggle("text-blue-600", active);
           });
+
+          // Show/Hide X Score filter row
+          if (val === 'xscore') {
+            els.filters.xScoreRow.classList.remove("hidden");
+          } else {
+            els.filters.xScoreRow.classList.add("hidden");
+          }
         }
 
-        if (key === "scoreRange") {
-          els.filters.scoreBtns.forEach((b) => {
+        // Handle X Score Range Buttons
+        if (key === "xScoreRange") {
+          els.filters.xScoreBtns.forEach((b) => {
             const active = b.dataset.val === val;
             b.classList.toggle("bg-slate-800", active);
             b.classList.toggle("text-white", active);
@@ -640,25 +662,31 @@
         return state.posts.filter((p) => {
           if (!p.published && !state.isAdmin) return false;
 
-          // ✅ safe tags
           const tagsText = Array.isArray(p.tags) ? p.tags.join(" ") : (p.tags || "");
           const title = (p.title || "");
           const desc = (p.description || "");
 
+          // Search
           if (state.filters.search) {
             const term = state.filters.search.toLowerCase();
             const match = (title + " " + desc + " " + tagsText).toLowerCase();
             if (!match.includes(term)) return false;
           }
 
+          // Type
           if (state.filters.type !== "all" && p.type !== state.filters.type) return false;
+          
+          // Category
           if (state.filters.category !== "all" && p.category !== state.filters.category) return false;
 
-          if (state.filters.scoreRange !== "all") {
-            const [min, max] = state.filters.scoreRange.split("-").map(Number);
-            const score = Number(p.score || 0);
-            if (score < min || score > max) return false;
+          // X Score filtering (Only if type is xscore)
+          if (state.filters.type === "xscore" && state.filters.xScoreRange !== "all") {
+            const xVal = Number(p.xScore || 0);
+            const [min, max] = state.filters.xScoreRange.split("-").map(Number);
+            if (xVal < min || xVal > max) return false;
           }
+
+          // Existing score filters removed for Alpha/Tools as requested
 
           return true;
         });
@@ -679,9 +707,19 @@
           card.className =
             "bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 dark:border-slate-800 group flex flex-col h-full";
 
-          const badgeColor = p.type === "alpha" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700";
-          const score = Number(p.score || 0);
-          const scoreColor = score >= 80 ? "bg-green-100 text-green-700" : score >= 50 ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700";
+          // Badge logic
+          let badgeColor = "bg-gray-100 text-gray-700";
+          if (p.type === "alpha") badgeColor = "bg-purple-100 text-purple-700";
+          else if (p.type === "tool") badgeColor = "bg-blue-100 text-blue-700";
+          else if (p.type === "xscore") badgeColor = "bg-indigo-100 text-indigo-700";
+
+          // Score Badge Logic: Only show for X Score type
+          let scoreBadgeHTML = "";
+          if (p.type === "xscore") {
+            const xVal = Number(p.xScore || 0);
+            const sColor = xVal >= 800 ? "bg-green-100 text-green-700" : xVal >= 400 ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700";
+            scoreBadgeHTML = `<span class="px-2 py-1 rounded-md text-xs font-bold ${sColor}">${xVal}</span>`;
+          }
 
           const img = p.imageUrl || "https://via.placeholder.com/400x300?text=No+Image";
           const tags = Array.isArray(p.tags) ? p.tags : [];
@@ -690,10 +728,10 @@
             <div class="relative h-48 overflow-hidden cursor-pointer" onclick="app.openPostDetails('${p.id}')">
               <img src="${img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <div class="absolute top-2 left-2 flex gap-1">
-                <span class="px-2 py-1 rounded-md text-xs font-bold uppercase ${badgeColor}">${p.type || ""}</span>
+                <span class="px-2 py-1 rounded-md text-xs font-bold uppercase ${badgeColor}">${p.type || "Post"}</span>
               </div>
               <div class="absolute top-2 right-2">
-                <span class="px-2 py-1 rounded-md text-xs font-bold ${scoreColor}">${score}</span>
+                ${scoreBadgeHTML}
               </div>
             </div>
             <div class="p-5 flex flex-col flex-1">
@@ -732,8 +770,17 @@
         m.querySelector("#modal-title").innerText = p.title || "";
         m.querySelector("#modal-desc").innerText = p.description || "";
         m.querySelector("#modal-content").innerText = p.content || "";
-        m.querySelector("#modal-type").innerText = p.type || "";
-        m.querySelector("#modal-score").innerText = `Score: ${Number(p.score || 0)}`;
+        m.querySelector("#modal-type").innerText = p.type || "Post";
+
+        // Score logic for modal
+        const scoreContainer = m.querySelector("#modal-score-container");
+        if (p.type === "xscore") {
+          scoreContainer.classList.remove("hidden");
+          scoreContainer.innerText = `XS: ${Number(p.xScore || 0)}`;
+          scoreContainer.className = "px-2 py-0.5 rounded text-xs font-bold bg-indigo-500 text-white";
+        } else {
+          scoreContainer.classList.add("hidden");
+        }
 
         const tags = Array.isArray(p.tags) ? p.tags : [];
         m.querySelector("#modal-tags").innerHTML = tags
@@ -780,10 +827,15 @@
         state.posts.forEach((p) => {
           const tr = document.createElement("tr");
           tr.className = "hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-700";
+          
+          let scoreDisplay = "-";
+          if (p.type === 'xscore') scoreDisplay = `XS: ${p.xScore || 0}`;
+          else if (p.score) scoreDisplay = p.score;
+
           tr.innerHTML = `
             <td class="p-4 font-medium dark:text-white">${p.title || ""}</td>
             <td class="p-4"><span class="px-2 py-1 rounded text-xs bg-slate-100 dark:bg-slate-600">${p.type || ""}</span></td>
-            <td class="p-4">${Number(p.score || 0)}</td>
+            <td class="p-4">${scoreDisplay}</td>
             <td class="p-4"><span class="w-2 h-2 inline-block rounded-full ${p.published ? "bg-green-500" : "bg-red-500"}"></span></td>
             <td class="p-4 text-right">
               <button class="text-blue-600 hover:underline mr-2" onclick="app.openPostModal('${p.id}')">Edit</button>
@@ -793,12 +845,27 @@
         });
       },
 
+      handleEditorTypeChange: () => {
+        const type = els.editor.typeSelect.value;
+        if (type === 'xscore') {
+          els.editor.stdScore.classList.add("hidden");
+          els.editor.xScore.classList.remove("hidden");
+        } else {
+          els.editor.stdScore.classList.remove("hidden");
+          els.editor.xScore.classList.add("hidden");
+        }
+      },
+
       openPostModal: (id = null) => {
         const form = document.getElementById("post-form");
         form.reset();
         document.getElementById("img-preview").classList.add("hidden");
         document.getElementById("delete-btn").classList.add("hidden");
         document.getElementById("editor-title").innerText = "Create New Post";
+
+        // Reset visibility based on default 'alpha'
+        els.editor.stdScore.classList.remove("hidden");
+        els.editor.xScore.classList.add("hidden");
 
         if (id) {
           const p = state.posts.find((x) => x.id === id);
@@ -809,7 +876,8 @@
             form.title.value = p.title || "";
             form.description.value = p.description || "";
             form.content.value = p.content || "";
-            form.score.value = Number(p.score || 0);
+            form.score.value = p.score || "";
+            form.xScore.value = p.xScore || "";
             form.category.value = p.category || "";
             form.socialLink.value = p.socialLink || "";
             form.tags.value = (Array.isArray(p.tags) ? p.tags : []).join(", ");
@@ -825,11 +893,13 @@
             document.getElementById("delete-btn").classList.remove("hidden");
           }
         }
+        
+        // Trigger visibility update based on loaded type
+        app.handleEditorTypeChange();
 
         app.openModal("editor");
       },
 
-      // ✅ FINAL Upload (no missing token)
       handleImagePreview: async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -887,7 +957,8 @@
           title: f.title.value,
           description: f.description.value,
           content: f.content.value,
-          score: Number(f.score.value),
+          score: f.score.value ? Number(f.score.value) : null,
+          xScore: f.xScore.value ? Number(f.xScore.value) : null,
           category: f.category.value,
           socialLink: f.socialLink.value,
           tags: f.tags.value.split(",").map((t) => t.trim()).filter(Boolean),
@@ -933,6 +1004,3 @@
   </script>
 </body>
 </html>
-
-
-
