@@ -911,7 +911,13 @@
 
       openPostModal: (id = null) => {
         const form = document.getElementById("post-form");
+        
+        // --- START OF FIX ---
         form.reset();
+        form.id.value = ""; // Force clear ID to ensure new doc creation
+        form.imageUrl.value = ""; // Force clear Image URL
+        // --- END OF FIX ---
+        
         document.getElementById("img-preview").classList.add("hidden");
         document.getElementById("delete-btn").classList.add("hidden");
         document.getElementById("editor-title").innerText = "Create New Post";
