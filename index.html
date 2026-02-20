@@ -45,9 +45,21 @@ from { transform: translateX(100%); opacity: 0; }
 to { transform: translateX(0); opacity: 1; }
 }
 .animate-slide-in { animation: slideInRight 0.5s ease-out forwards; }
-
 /* Carousel styles */
 .carousel-track { transition: transform 0.3s ease-in-out; }
+/* Ad Slot Styles */
+.ad-slot {
+min-height: 0;
+transition: min-height 0.3s;
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 1rem 0;
+overflow: hidden;
+}
+.ad-slot.filled {
+min-height: 90px;
+}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white transition-colors duration-300 font-sans flex flex-col min-h-screen">
@@ -68,30 +80,29 @@ to { transform: translateX(0); opacity: 1; }
 <i class="fa-solid fa-lock"></i> Insider Deals
 </button>
 </div>
-
 <div class="hidden md:flex flex-1 max-w-lg mx-8 relative">
-      <input type="text" id="global-search" placeholder="Search resources..." class="w-full pl-10 pr-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-blue-500 transition-all" />
-      <i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400"></i>
-    </div>
+<input type="text" id="global-search" placeholder="Search resources..." class="w-full pl-10 pr-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 border-none focus:ring-2 focus:ring-blue-500 transition-all" />
+<i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400"></i>
+</div>
 
-    <div class="flex items-center gap-4">
-      <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
-        <i class="fa-solid fa-moon"></i>
-      </button>
-      <button id="auth-btn" class="px-4 py-2 rounded-lg font-medium text-sm bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">
-        Sign In
-      </button>
-      <button id="admin-panel-btn" class="hidden px-4 py-2 rounded-lg font-medium text-sm bg-purple-600 text-white hover:bg-purple-700 transition shadow-lg">
-        Admin
-      </button>
-    </div>
-  </div>
-  <!-- Mobile Insider Link -->
-  <div class="md:hidden py-2 border-t border-slate-200 dark:border-slate-800 flex justify-center">
-     <button onclick="app.requestInsiderAccess()" class="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
-        <i class="fa-solid fa-lock"></i> Access Insider Deals
-      </button>
-  </div>
+<div class="flex items-center gap-4">
+  <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+  <button id="auth-btn" class="px-4 py-2 rounded-lg font-medium text-sm bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg shadow-blue-500/30">
+    Sign In
+  </button>
+  <button id="admin-panel-btn" class="hidden px-4 py-2 rounded-lg font-medium text-sm bg-purple-600 text-white hover:bg-purple-700 transition shadow-lg">
+    Admin
+  </button>
+</div>
+</div>
+<!-- Mobile Insider Link -->
+<div class="md:hidden py-2 border-t border-slate-200 dark:border-slate-800 flex justify-center">
+<button onclick="app.requestInsiderAccess()" class="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
+<i class="fa-solid fa-lock"></i> Access Insider Deals
+</button>
+</div>
 </div>
 </nav>
 <!-- Admin Dashboard -->
@@ -104,204 +115,228 @@ to { transform: translateX(0); opacity: 1; }
 <button onclick="app.openPostModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-lg">+ New Post</button>
 </div>
 </div>
-
 <div class="flex gap-4 border-b border-slate-300 dark:border-slate-700 mb-6 overflow-x-auto">
-    <button onclick="app.switchAdminTab('posts')" id="tab-btn-posts" class="pb-2 border-b-2 border-blue-600 font-semibold px-2 whitespace-nowrap">Posts</button>
-    <button onclick="app.switchAdminTab('deals')" id="tab-btn-deals" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Insider Deals</button>
-    <button onclick="app.switchAdminTab('settings')" id="tab-btn-settings" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Settings</button>
-    <button onclick="app.switchAdminTab('notifications')" id="tab-btn-notifications" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Send Notification</button>
+<button onclick="app.switchAdminTab('posts')" id="tab-btn-posts" class="pb-2 border-b-2 border-blue-600 font-semibold px-2 whitespace-nowrap">Posts</button>
+<button onclick="app.switchAdminTab('deals')" id="tab-btn-deals" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Insider Deals</button>
+<button onclick="app.switchAdminTab('ads')" id="tab-btn-ads" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Ads Manager</button>
+<button onclick="app.switchAdminTab('settings')" id="tab-btn-settings" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Settings</button>
+<button onclick="app.switchAdminTab('notifications')" id="tab-btn-notifications" class="pb-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 whitespace-nowrap">Send Notification</button>
+</div>
+<!-- Admin Posts Tab -->
+<div id="admin-posts-tab" class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 uppercase">
+<tr>
+<th class="p-4">Title</th>
+<th class="p-4">Type</th>
+<th class="p-4">Score</th>
+<th class="p-4">Status</th>
+<th class="p-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="admin-posts-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+</table>
+</div>
+<!-- Admin Insider Deals Tab -->
+<div id="admin-deals-tab" class="hidden">
+<div class="flex justify-end mb-4">
+<button onclick="app.openDealEditor()" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 shadow-lg">+ New Deal</button>
+</div>
+<div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 uppercase">
+<tr>
+<th class="p-4">Deal Title</th>
+<th class="p-4">Status</th>
+<th class="p-4">Expiry</th>
+<th class="p-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="admin-deals-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+</table>
+</div>
+</div>
+<!-- Admin Ads Manager Tab -->
+<div id="admin-ads-tab" class="hidden">
+<div class="flex justify-between items-center mb-4">
+<p class="text-sm text-slate-500">Manage all ad placements centrally. Ads update in real-time.</p>
+<button onclick="app.openAdEditor()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-lg">+ New Ad</button>
+</div>
+<div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 uppercase">
+<tr>
+<th class="p-4">Placement</th>
+<th class="p-4">Network</th>
+<th class="p-4">Status</th>
+<th class="p-4">ID</th>
+<th class="p-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="admin-ads-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+</table>
+</div>
+</div>
+<!-- Admin Settings Tab -->
+<div id="admin-settings-tab" class="hidden max-w-2xl bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm">
+<form id="settings-form" class="space-y-4">
+<div>
+<label class="block text-sm font-medium mb-1">Site Name</label>
+<input type="text" name="siteName" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Hero Title</label>
+<input type="text" name="heroTitle" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Hero Subtitle</label>
+<input type="text" name="heroSubtitle" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Primary Theme Color</label>
+<select name="primaryTheme" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600">
+<option value="blue">Blue</option>
+<option value="emerald">Emerald</option>
+<option value="indigo">Indigo</option>
+<option value="rose">Rose</option>
+<option value="amber">Amber</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium mb-1">Allowed Admin Email (Be Careful)</label>
+<input type="email" name="allowedAdminEmail" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+</div>
+<button type="submit" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700">Save Settings</button>
+</form>
+</div>
+<!-- Admin Notifications Tab -->
+<div id="admin-notifications-tab" class="hidden max-w-2xl bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm">
+<h3 class="text-xl font-bold mb-4">Send Push Notification</h3>
+<p class="text-sm text-slate-500 mb-6">This will display a live pop-up for all users currently on the site.</p>
+
+<form id="notification-form" class="space-y-4">
+  <div>
+    <label class="block text-sm font-medium mb-1">Select Post (Optional Auto-fill)</label>
+    <select id="notif-post-select" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" onchange="app.fillNotificationForm(this.value)">
+      <option value="">-- Manual Entry --</option>
+    </select>
   </div>
 
-  <!-- Admin Posts Tab -->
-  <div id="admin-posts-tab" class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-sm">
-    <table class="w-full text-left text-sm">
-      <thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 uppercase">
-        <tr>
-          <th class="p-4">Title</th>
-          <th class="p-4">Type</th>
-          <th class="p-4">Score</th>
-          <th class="p-4">Status</th>
-          <th class="p-4 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="admin-posts-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
-    </table>
+  <div>
+    <label class="block text-sm font-medium mb-1">Notification Title</label>
+    <input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
   </div>
 
-  <!-- Admin Insider Deals Tab -->
-  <div id="admin-deals-tab" class="hidden">
-    <div class="flex justify-end mb-4">
-       <button onclick="app.openDealEditor()" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 shadow-lg">+ New Deal</button>
+  <div>
+    <label class="block text-sm font-medium mb-1">Short Message</label>
+    <input type="text" name="message" required placeholder="e.g. New Alpha Dropped!" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Image URL</label>
+      <input type="text" name="imageUrl" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
     </div>
-    <div class="overflow-x-auto bg-white dark:bg-slate-800 rounded-xl shadow-sm">
-      <table class="w-full text-left text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 uppercase">
-          <tr>
-            <th class="p-4">Deal Title</th>
-            <th class="p-4">Status</th>
-            <th class="p-4">Expiry</th>
-            <th class="p-4 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="admin-deals-table-body" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
-      </table>
+    <div>
+      <label class="block text-sm font-medium mb-1">Target Post ID</label>
+      <input type="text" name="postId" placeholder="ID for deep link" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
     </div>
   </div>
 
-  <!-- Admin Settings Tab -->
-  <div id="admin-settings-tab" class="hidden max-w-2xl bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm">
-    <form id="settings-form" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Site Name</label>
-        <input type="text" name="siteName" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Hero Title</label>
-        <input type="text" name="heroTitle" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Hero Subtitle</label>
-        <input type="text" name="heroSubtitle" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Primary Theme Color</label>
-        <select name="primaryTheme" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600">
-          <option value="blue">Blue</option>
-          <option value="emerald">Emerald</option>
-          <option value="indigo">Indigo</option>
-          <option value="rose">Rose</option>
-          <option value="amber">Amber</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Allowed Admin Email (Be Careful)</label>
-        <input type="email" name="allowedAdminEmail" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-      <button type="submit" class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700">Save Settings</button>
-    </form>
-  </div>
-
-  <!-- Admin Notifications Tab -->
-  <div id="admin-notifications-tab" class="hidden max-w-2xl bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm">
-    <h3 class="text-xl font-bold mb-4">Send Push Notification</h3>
-    <p class="text-sm text-slate-500 mb-6">This will display a live pop-up for all users currently on the site.</p>
-    
-    <form id="notification-form" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Select Post (Optional Auto-fill)</label>
-        <select id="notif-post-select" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" onchange="app.fillNotificationForm(this.value)">
-          <option value="">-- Manual Entry --</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Notification Title</label>
-        <input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-1">Short Message</label>
-        <input type="text" name="message" required placeholder="e.g. New Alpha Dropped!" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">Image URL</label>
-          <input type="text" name="imageUrl" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Target Post ID</label>
-          <input type="text" name="postId" placeholder="ID for deep link" class="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" />
-        </div>
-      </div>
-
-      <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded hover:bg-indigo-700 shadow-lg">
-        <i class="fa-solid fa-paper-plane mr-2"></i> Send Notification
-      </button>
-    </form>
-  </div>
-
+  <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded hover:bg-indigo-700 shadow-lg">
+    <i class="fa-solid fa-paper-plane mr-2"></i> Send Notification
+  </button>
+</form>
+</div>
 </div>
 </div>
 <!-- Main Content Wrapper -->
 <main id="public-view" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-1 w-full">
-
+<!-- AD SLOT: HOME TOP -->
+<div id="ad-home-top" class="ad-slot w-full text-center"></div>
 <!-- STANDARD POSTS VIEW -->
 <div id="standard-view-content">
-    <div class="text-center mb-12 animate-fade-in">
-    <h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
-        Discover Excellence
-    </h1>
-    <p id="hero-subtitle" class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-        Curated Alpha Posts & AI Tools for the modern professional.
-    </p>
-    </div>
-
-    <div class="sticky top-16 z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur py-4 mb-8 border-b border-slate-200 dark:border-slate-800">
-    <div class="flex flex-col gap-4">
-        <div class="flex flex-wrap items-center justify-center gap-3">
-        <div class="md:hidden w-full mb-2">
-            <input type="text" id="mobile-search" placeholder="Search..." class="w-full p-2 rounded border dark:bg-slate-800 dark:border-slate-700" />
-        </div>
-
-        <div class="bg-slate-200 dark:bg-slate-800 p-1 rounded-lg inline-flex">
-            <button onclick="app.setFilter('type', 'all')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition active-filter" data-val="all">All</button>
-            <button onclick="app.setFilter('type', 'alpha')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="alpha">Alpha</button>
-            <button onclick="app.setFilter('type', 'tool')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="tool">AI Tools</button>
-            <button onclick="app.setFilter('type', 'xscore')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="xscore">X Score</button>
-        </div>
-
-        <select id="category-filter" onchange="app.setFilter('category', this.value)" class="p-2 pr-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500">
-            <option value="all">All Categories</option>
-        </select>
-        </div>
-
-        <!-- X Score Filters -->
-        <div id="xscore-filter-row" class="hidden flex flex-wrap justify-center gap-2">
-        <button onclick="app.setFilter('xScoreRange', 'all')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs font-semibold active-score" data-val="all">Any Score</button>
-        <button onclick="app.setFilter('xScoreRange', '100-200')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="100-200">100-200</button>
-        <button onclick="app.setFilter('xScoreRange', '200-400')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="200-400">200-400</button>
-        <button onclick="app.setFilter('xScoreRange', '400-800')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="400-800">400-800</button>
-        <button onclick="app.setFilter('xScoreRange', '800-1000')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="800-1000">800-1000</button>
-        </div>
-    </div>
-    </div>
-
-    <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Skeletons -->
-    <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
-    <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
-    <div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
-    </div>
-
-    <div id="empty-state" class="hidden text-center py-20">
-    <i class="fa-regular fa-folder-open text-6xl text-slate-300 mb-4"></i>
-    <p class="text-xl text-slate-500">No results found.</p>
-    </div>
+<div class="text-center mb-12 animate-fade-in">
+<h1 id="hero-title" class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
+Discover Excellence
+</h1>
+<p id="hero-subtitle" class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+Curated Alpha Posts & AI Tools for the modern professional.
+</p>
 </div>
 
-<!-- INSIDER DEALS VIEW -->
-<div id="insider-view" class="hidden animate-fade-in">
-    <div class="flex flex-col items-center mb-10">
-        <div class="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
-            <i class="fa-solid fa-lock-open"></i> Access Granted: CryptoAIInsider
-        </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold text-center mb-2">Insider Deals</h1>
-        <p class="text-slate-600 dark:text-slate-400 max-w-2xl text-center">Exclusive time-limited offers, premium tools, and high-level alpha.</p>
-        <button onclick="app.lockInsider()" class="mt-4 text-xs text-red-500 hover:text-red-700 hover:underline">Lock Access & Return Home</button>
+<div class="sticky top-16 z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur py-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+<div class="flex flex-col gap-4">
+    <div class="flex flex-wrap items-center justify-center gap-3">
+    <div class="md:hidden w-full mb-2">
+        <input type="text" id="mobile-search" placeholder="Search..." class="w-full p-2 rounded border dark:bg-slate-800 dark:border-slate-700" />
     </div>
 
-    <!-- Deals Grid -->
-    <div id="insider-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-    
-    <div id="insider-empty" class="hidden text-center py-16">
-        <i class="fa-solid fa-gem text-6xl text-slate-200 dark:text-slate-800 mb-4"></i>
-        <p class="text-slate-500">No active deals right now. Check back later.</p>
+    <div class="bg-slate-200 dark:bg-slate-800 p-1 rounded-lg inline-flex">
+        <button onclick="app.setFilter('type', 'all')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition active-filter" data-val="all">All</button>
+        <button onclick="app.setFilter('type', 'alpha')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="alpha">Alpha</button>
+        <button onclick="app.setFilter('type', 'tool')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="tool">AI Tools</button>
+        <button onclick="app.setFilter('type', 'xscore')" class="filter-type-btn px-4 py-1.5 rounded-md text-sm font-medium transition" data-val="xscore">X Score</button>
     </div>
+
+    <select id="category-filter" onchange="app.setFilter('category', this.value)" class="p-2 pr-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500">
+        <option value="all">All Categories</option>
+    </select>
+    </div>
+
+    <!-- X Score Filters -->
+    <div id="xscore-filter-row" class="hidden flex flex-wrap justify-center gap-2">
+    <button onclick="app.setFilter('xScoreRange', 'all')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs font-semibold active-score" data-val="all">Any Score</button>
+    <button onclick="app.setFilter('xScoreRange', '100-200')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="100-200">100-200</button>
+    <button onclick="app.setFilter('xScoreRange', '200-400')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="200-400">200-400</button>
+    <button onclick="app.setFilter('xScoreRange', '400-800')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="400-800">400-800</button>
+    <button onclick="app.setFilter('xScoreRange', '800-1000')" class="filter-xscore-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-val="800-1000">800-1000</button>
+    </div>
+</div>
+</div>
+
+<!-- AD SLOT: HOME MIDDLE (Below filters, above grid) -->
+<div id="ad-home-middle" class="ad-slot w-full text-center"></div>
+
+<div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Skeletons -->
+<div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+<div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+<div class="h-80 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse"></div>
+</div>
+
+<!-- AD SLOT: HOME BOTTOM -->
+<div id="ad-home-bottom" class="ad-slot w-full text-center"></div>
+
+<div id="empty-state" class="hidden text-center py-20">
+<i class="fa-regular fa-folder-open text-6xl text-slate-300 mb-4"></i>
+<p class="text-xl text-slate-500">No results found.</p>
+</div>
+</div>
+<!-- INSIDER DEALS VIEW -->
+<div id="insider-view" class="hidden animate-fade-in">
+<div class="flex flex-col items-center mb-10">
+<div class="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+<i class="fa-solid fa-lock-open"></i> Access Granted: CryptoAIInsider
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold text-center mb-2">Insider Deals</h1>
+<p class="text-slate-600 dark:text-slate-400 max-w-2xl text-center">Exclusive time-limited offers, premium tools, and high-level alpha.</p>
+<button onclick="app.lockInsider()" class="mt-4 text-xs text-red-500 hover:text-red-700 hover:underline">Lock Access & Return Home</button>
+</div>
+
+<!-- Deals Grid -->
+<div id="insider-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+<div id="insider-empty" class="hidden text-center py-16">
+    <i class="fa-solid fa-gem text-6xl text-slate-200 dark:text-slate-800 mb-4"></i>
+    <p class="text-slate-500">No active deals right now. Check back later.</p>
+</div>
 </div>
 </main>
 <!-- Footer -->
 <footer class="w-full py-8 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+<!-- AD SLOT: FOOTER -->
+<div id="ad-footer" class="ad-slot w-full text-center mb-4"></div>
 <div class="max-w-7xl mx-auto px-4 text-center">
 <p class="text-sm text-slate-500 dark:text-slate-400">
 Build By <a href="https://x.com/ai_elon_musk_" target="_blank" class="font-bold text-blue-600 hover:text-blue-700 hover:underline transition">CryptoAI_Insider</a>
@@ -326,23 +361,25 @@ Build By <a href="https://x.com/ai_elon_musk_" target="_blank" class="font-bold 
 </div>
 </div>
 <div class="p-6 md:p-8">
+<!-- AD SLOT: POST MODAL (Top of content) -->
+<div id="ad-post-modal" class="ad-slot w-full text-center mb-4"></div>
 <div class="flex flex-wrap gap-2 mb-6" id="modal-tags"></div>
 <p id="modal-desc" class="text-lg text-slate-600 dark:text-slate-300 font-medium mb-6 leading-relaxed"></p>
 <div id="modal-content" class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-400 mb-8 whitespace-pre-wrap"></div>
-
 <!-- Social Buttons Row -->
-      <div id="modal-social-row" class="flex flex-wrap gap-3 mb-4 empty:hidden"></div>
 
-      <div class="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-        <a id="modal-link" href="#" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-500/20">
-          Visit Resource <i class="fa-solid fa-external-link-alt ml-2"></i>
-        </a>
-        <button onclick="app.sharePost()" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
-      </div>
-    </div>
+<div id="modal-social-row" class="flex flex-wrap gap-3 mb-4 empty:hidden"></div>
+
+  <div class="flex gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+    <a id="modal-link" href="#" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-500/20">
+      Visit Resource <i class="fa-solid fa-external-link-alt ml-2"></i>
+    </a>
+    <button onclick="app.sharePost()" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+      <i class="fa-solid fa-share-nodes"></i>
+    </button>
   </div>
+</div>
+</div>
 </div>
 </div>
 <!-- Insider Deal Modal -->
@@ -351,34 +388,33 @@ Build By <a href="https://x.com/ai_elon_musk_" target="_blank" class="font-bold 
 <button onclick="app.closeModals()" class="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur">
 <i class="fa-solid fa-xmark"></i>
 </button>
-
 <div class="flex flex-col lg:flex-row h-full">
-        <!-- Carousel Side -->
-        <div class="w-full lg:w-1/2 bg-black relative flex items-center justify-center h-64 lg:h-auto overflow-hidden group">
-            <div id="deal-carousel-track" class="flex w-full h-full transition-transform duration-500">
-                <!-- Images injected here -->
-            </div>
-            <!-- Carousel Controls -->
-            <button onclick="app.cycleDealImage(-1)" class="absolute left-2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-chevron-left"></i></button>
-            <button onclick="app.cycleDealImage(1)" class="absolute right-2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-chevron-right"></i></button>
-            <div id="deal-carousel-dots" class="absolute bottom-4 flex gap-2 justify-center w-full"></div>
-        </div>
+<!-- Carousel Side -->
+<div class="w-full lg:w-1/2 bg-black relative flex items-center justify-center h-64 lg:h-auto overflow-hidden group">
+<div id="deal-carousel-track" class="flex w-full h-full transition-transform duration-500">
+<!-- Images injected here -->
+</div>
+<!-- Carousel Controls -->
+<button onclick="app.cycleDealImage(-1)" class="absolute left-2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-chevron-left"></i></button>
+<button onclick="app.cycleDealImage(1)" class="absolute right-2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-chevron-right"></i></button>
+<div id="deal-carousel-dots" class="absolute bottom-4 flex gap-2 justify-center w-full"></div>
+</div>
 
-        <!-- Content Side -->
-        <div class="w-full lg:w-1/2 flex flex-col h-full overflow-hidden">
-            <div class="overflow-y-auto p-8 custom-scrollbar flex-1">
-                <div class="flex gap-2 mb-4">
-                     <span id="deal-badge-free" class="hidden bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Free Offer</span>
-                     <span id="deal-badge-expiry" class="hidden bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"></span>
-                </div>
-                <h2 id="deal-title" class="text-3xl lg:text-4xl font-extrabold mb-6 leading-tight"></h2>
-                <div id="deal-desc" class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-base leading-relaxed whitespace-pre-wrap"></div>
+<!-- Content Side -->
+    <div class="w-full lg:w-1/2 flex flex-col h-full overflow-hidden">
+        <div class="overflow-y-auto p-8 custom-scrollbar flex-1">
+            <div class="flex gap-2 mb-4">
+                 <span id="deal-badge-free" class="hidden bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Free Offer</span>
+                 <span id="deal-badge-expiry" class="hidden bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"></span>
             </div>
-            <div id="deal-links-container" class="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
-                <!-- Dynamic Links -->
-            </div>
+            <h2 id="deal-title" class="text-3xl lg:text-4xl font-extrabold mb-6 leading-tight"></h2>
+            <div id="deal-desc" class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-base leading-relaxed whitespace-pre-wrap"></div>
+        </div>
+        <div id="deal-links-container" class="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+            <!-- Dynamic Links -->
         </div>
     </div>
+</div>
 </div>
 </div>
 <!-- Gate Modal (Password Protection) -->
@@ -446,91 +482,92 @@ Login / Register
 <option value="xscore">X Score</option>
 </select>
 </div>
-
 <!-- Standard Score -->
-        <div id="field-std-score">
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Score (Optional 0-100)</label>
-          <input type="number" name="score" min="0" max="100" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 text-slate-500" placeholder="Ignored for X Score" />
-        </div>
+code
+Code
+<div id="field-std-score">
+      <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Score (Optional 0-100)</label>
+      <input type="number" name="score" min="0" max="100" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 text-slate-500" placeholder="Ignored for X Score" />
+    </div>
 
-        <!-- X Score -->
-        <div id="field-xscore" class="hidden">
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X Score (100-1000)</label>
-          <input type="number" name="xScore" min="0" max="1000" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Title</label>
-        <input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Category</label>
-        <input type="text" name="category" placeholder="e.g. Finance, Coding" list="cat-list" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-        <datalist id="cat-list"></datalist>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Image</label>
-        <input type="file" id="img-upload" accept="image/*" class="w-full text-sm" />
-        <input type="hidden" name="imageUrl" />
-        <div id="img-preview" class="mt-2 h-20 w-20 bg-slate-100 rounded bg-cover bg-center hidden"></div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Short Description</label>
-        <textarea name="description" rows="2" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700"></textarea>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Content (Markdown-ish)</label>
-        <textarea name="content" rows="6" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-sm"></textarea>
-      </div>
-
-      <!-- Social Links Section -->
-      <div class="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
-        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Links</h4>
-        
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">External / Main Link</label>
-            <input type="url" name="socialLink" placeholder="https://" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X (Twitter)</label>
-              <input type="text" name="xLink" placeholder="https://x.com/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Discord</label>
-              <input type="text" name="discordLink" placeholder="https://discord.gg/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Telegram</label>
-              <input type="text" name="telegramLink" placeholder="https://t.me/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Tags (comma separated)</label>
-        <input type="text" name="tags" placeholder="tech, ai, crypto" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-      </div>
-
-      <div class="flex items-center gap-2">
-        <input type="checkbox" name="published" id="pub-check" class="w-5 h-5" />
-        <label for="pub-check">Published (Visible to public)</label>
-      </div>
-
-      <div class="pt-4 flex gap-3">
-        <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Save Post</button>
-        <button type="button" id="delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
-      </div>
-    </form>
+    <!-- X Score -->
+    <div id="field-xscore" class="hidden">
+      <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X Score (100-1000)</label>
+      <input type="number" name="xScore" min="0" max="1000" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+    </div>
   </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Title</label>
+    <input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+  </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Category</label>
+    <input type="text" name="category" placeholder="e.g. Finance, Coding" list="cat-list" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+    <datalist id="cat-list"></datalist>
+  </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Image</label>
+    <input type="file" id="img-upload" accept="image/*" class="w-full text-sm" />
+    <input type="hidden" name="imageUrl" />
+    <div id="img-preview" class="mt-2 h-20 w-20 bg-slate-100 rounded bg-cover bg-center hidden"></div>
+  </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Short Description</label>
+    <textarea name="description" rows="2" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700"></textarea>
+  </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Content (Markdown-ish)</label>
+    <textarea name="content" rows="6" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-sm"></textarea>
+  </div>
+
+  <!-- Social Links Section -->
+  <div class="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
+    <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Links</h4>
+    
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">External / Main Link</label>
+        <input type="url" name="socialLink" placeholder="https://" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">X (Twitter)</label>
+          <input type="text" name="xLink" placeholder="https://x.com/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Discord</label>
+          <input type="text" name="discordLink" placeholder="https://discord.gg/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Telegram</label>
+          <input type="text" name="telegramLink" placeholder="https://t.me/..." class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Tags (comma separated)</label>
+    <input type="text" name="tags" placeholder="tech, ai, crypto" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" name="published" id="pub-check" class="w-5 h-5" />
+    <label for="pub-check">Published (Visible to public)</label>
+  </div>
+
+  <div class="pt-4 flex gap-3">
+    <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Save Post</button>
+    <button type="button" id="delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
+  </div>
+</form>
+</div>
 </div>
 </div>
 <!-- Admin DEAL Editor Modal -->
@@ -543,57 +580,121 @@ Login / Register
 <div class="overflow-y-auto p-6 flex-1">
 <form id="deal-form" class="space-y-4">
 <input type="hidden" name="id" />
-
 <div>
-                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Deal Title</label>
-                <input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+<label class="block text-xs font-bold uppercase text-slate-500 mb-1">Deal Title</label>
+<input type="text" name="title" required class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+</div>
+code
+Code
+<div class="grid grid-cols-2 gap-4">
+            <div class="flex items-center gap-2 pt-4">
+                <input type="checkbox" name="isFreeOffer" id="deal-free-check" class="w-5 h-5 accent-green-600" />
+                <label for="deal-free-check" class="font-medium">Free for limited time?</label>
             </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="flex items-center gap-2 pt-4">
-                    <input type="checkbox" name="isFreeOffer" id="deal-free-check" class="w-5 h-5 accent-green-600" />
-                    <label for="deal-free-check" class="font-medium">Free for limited time?</label>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Expires At (Optional)</label>
-                    <input type="datetime-local" name="expiresAt" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
-                </div>
-            </div>
-
             <div>
-                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Full Description (Premium Tips)</label>
-                <textarea name="description" rows="6" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-sm"></textarea>
+                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Expires At (Optional)</label>
+                <input type="datetime-local" name="expiresAt" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
             </div>
+        </div>
 
-            <!-- Multiple Images -->
-            <div>
-                <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Images (Multiple)</label>
-                <input type="file" id="deal-img-upload" accept="image/*" multiple class="w-full text-sm mb-2" />
-                <div id="deal-img-list" class="flex flex-wrap gap-2"></div>
-                <!-- Hidden field to store array of URLs -->
-                <input type="hidden" name="imagesJSON" value="[]" />
-            </div>
+        <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Full Description (Premium Tips)</label>
+            <textarea name="description" rows="6" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-sm"></textarea>
+        </div>
 
-            <!-- Dynamic Links -->
-            <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
-                <div class="flex justify-between items-center mb-2">
-                    <label class="block text-xs font-bold uppercase text-slate-500">Links</label>
-                    <button type="button" onclick="app.addDealLinkField()" class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200">+ Add Link</button>
-                </div>
-                <div id="deal-links-editor" class="space-y-2"></div>
-            </div>
+        <!-- Multiple Images -->
+        <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Images (Multiple)</label>
+            <input type="file" id="deal-img-upload" accept="image/*" multiple class="w-full text-sm mb-2" />
+            <div id="deal-img-list" class="flex flex-wrap gap-2"></div>
+            <!-- Hidden field to store array of URLs -->
+            <input type="hidden" name="imagesJSON" value="[]" />
+        </div>
 
-            <div class="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <input type="checkbox" name="published" id="deal-pub-check" class="w-5 h-5 accent-blue-600" />
-                <label for="deal-pub-check">Published (Visible to Insiders)</label>
+        <!-- Dynamic Links -->
+        <div class="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div class="flex justify-between items-center mb-2">
+                <label class="block text-xs font-bold uppercase text-slate-500">Links</label>
+                <button type="button" onclick="app.addDealLinkField()" class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200">+ Add Link</button>
             </div>
+            <div id="deal-links-editor" class="space-y-2"></div>
+        </div>
 
-            <div class="pt-4 flex gap-3">
-                <button type="submit" class="flex-1 bg-amber-600 text-white py-2 rounded hover:bg-amber-700 font-bold">Save Deal</button>
-                <button type="button" id="deal-delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
-            </div>
-        </form>
+        <div class="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+            <input type="checkbox" name="published" id="deal-pub-check" class="w-5 h-5 accent-blue-600" />
+            <label for="deal-pub-check">Published (Visible to Insiders)</label>
+        </div>
+
+        <div class="pt-4 flex gap-3">
+            <button type="submit" class="flex-1 bg-amber-600 text-white py-2 rounded hover:bg-amber-700 font-bold">Save Deal</button>
+            <button type="button" id="deal-delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+<!-- Admin AD Editor Modal -->
+<div id="ad-editor-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+<div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-fade-in">
+<div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Configure Ad Placement</h3>
+<button onclick="app.closeModals()" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<div class="p-6">
+<form id="ad-form" class="space-y-4">
+<input type="hidden" name="id" />
+code
+Code
+<div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Placement</label>
+            <select name="placement" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700">
+                <option value="home_top">Home: Top</option>
+                <option value="home_middle">Home: Middle</option>
+                <option value="home_bottom">Home: Bottom</option>
+                <option value="post_modal">Post Modal (Inside)</option>
+                <option value="footer">Footer</option>
+            </select>
+        </div>
+        <div>
+             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Network</label>
+             <select name="network" id="ad-network-select" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" onchange="app.toggleAdFields()">
+                 <option value="admob">Google Ads / AdMob</option>
+                 <option value="custom">Adsterra / Custom Script</option>
+             </select>
+        </div>
     </div>
+
+    <!-- Google Ad Fields -->
+    <div id="ad-fields-google">
+         <div class="mb-2">
+             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Data Ad Client (ca-pub-xxx)</label>
+             <input type="text" name="adClient" placeholder="ca-pub-123456789" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+         </div>
+         <div>
+             <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Data Ad Slot (ID)</label>
+             <input type="text" name="adSlot" placeholder="1234567890" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700" />
+         </div>
+    </div>
+
+    <!-- Custom Script Fields -->
+    <div id="ad-fields-custom" class="hidden">
+         <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Script / HTML Code</label>
+         <textarea name="adScript" rows="5" class="w-full p-2 border rounded dark:bg-slate-800 dark:border-slate-700 font-mono text-xs placeholder-slate-500" placeholder="<script>...</script> or <iframe>...</iframe>"></textarea>
+         <p class="text-xs text-slate-400 mt-1">Be careful. Malformed scripts can break the page.</p>
+    </div>
+
+    <div class="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+         <input type="checkbox" name="enabled" id="ad-enabled-check" class="w-5 h-5 accent-green-600" />
+         <label for="ad-enabled-check">Enable this ad unit</label>
+    </div>
+
+    <div class="pt-4 flex gap-3">
+         <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold">Save Ad</button>
+         <button type="button" id="ad-delete-btn" class="hidden px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
+    </div>
+  </form>
+</div>
 </div>
 </div>
 <!-- JS LOGIC -->
@@ -642,11 +743,12 @@ primaryTheme: "blue",
 allowedAdminEmail: "",
 },
 posts: [],
-insiderDeals: [], // New collection data
+insiderDeals: [],
+ads: [], // Ad configurations
 filters: { search: "", type: "all", category: "all", xScoreRange: "all" },
 categories: new Set(),
 initialDeepLinkChecked: false,
-insiderAccess: false, // Local gate state
+insiderAccess: false,
 dealCarouselIdx: 0,
 currentDealImages: []
 };
@@ -667,6 +769,7 @@ editor: document.getElementById("editor-modal"),
 deal: document.getElementById("deal-modal"),
 dealEditor: document.getElementById("deal-editor-modal"),
 gate: document.getElementById("gate-modal"),
+adEditor: document.getElementById("ad-editor-modal"),
 },
 filters: {
 typeBtns: document.querySelectorAll(".filter-type-btn"),
@@ -682,15 +785,18 @@ view: document.getElementById("admin-view"),
 publicView: document.getElementById("public-view"),
 postsBody: document.getElementById("admin-posts-table-body"),
 dealsBody: document.getElementById("admin-deals-table-body"),
+adsBody: document.getElementById("admin-ads-table-body"),
 tabs: {
 posts: document.getElementById("admin-posts-tab"),
 deals: document.getElementById("admin-deals-tab"),
+ads: document.getElementById("admin-ads-tab"),
 settings: document.getElementById("admin-settings-tab"),
 notifications: document.getElementById("admin-notifications-tab"),
 },
 buttons: {
 posts: document.getElementById("tab-btn-posts"),
 deals: document.getElementById("tab-btn-deals"),
+ads: document.getElementById("tab-btn-ads"),
 settings: document.getElementById("tab-btn-settings"),
 notifications: document.getElementById("tab-btn-notifications"),
 }
@@ -738,14 +844,14 @@ localStorage.getItem("theme") === "dark" ||
 document.documentElement.classList.add("dark");
 }
 
-// Check local storage for Insider Access
 if (localStorage.getItem("insider_access") === "true") {
 state.insiderAccess = true;
 }
 
 app.listenSettings();
 app.listenPosts();
-app.listenInsiderDeals(); // Listen to deals
+app.listenInsiderDeals();
+app.listenAds(); // Initialize Ads
 app.listenNotifications();
 
 document.getElementById("theme-toggle").onclick = app.toggleTheme;
@@ -754,8 +860,10 @@ document.getElementById("admin-panel-btn").onclick = app.openAdmin;
 document.getElementById("auth-form").onsubmit = app.handleAuth;
 document.getElementById("post-form").onsubmit = app.savePost;
 document.getElementById("deal-form").onsubmit = app.saveDeal;
+document.getElementById("ad-form").onsubmit = app.saveAd;
 document.getElementById("delete-btn").onclick = app.deletePost;
 document.getElementById("deal-delete-btn").onclick = app.deleteDeal;
+document.getElementById("ad-delete-btn").onclick = app.deleteAd;
 document.getElementById("img-upload").onchange = app.handleImagePreview;
 document.getElementById("deal-img-upload").onchange = app.handleDealImagesUpload;
 document.getElementById("notification-form").onsubmit = app.sendNotification;
@@ -826,6 +934,187 @@ state.isAdmin = false;
 els.admin.btn.classList.add("hidden");
 if (!els.admin.view.classList.contains("hidden")) app.closeAdmin();
 }
+// Re-run ad listener to get all ads if admin
+app.listenAds();
+},
+
+// --- ADS MANAGER LOGIC ---
+
+listenAds: () => {
+let q;
+if (state.isAdmin) {
+q = query(collection(db, "ads"), orderBy("createdAt", "desc"));
+} else {
+q = query(collection(db, "ads"), where("enabled", "==", true));
+}
+
+onSnapshot(q, (snapshot) => {
+state.ads = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+if (state.isAdmin) app.renderAdminAdsTable();
+app.renderPublicAds();
+});
+},
+
+renderPublicAds: () => {
+// Clear all slots first
+document.querySelectorAll(".ad-slot").forEach(slot => {
+slot.innerHTML = "";
+slot.classList.remove("filled");
+});
+
+const placements = {};
+state.ads.forEach(ad => {
+if (!ad.enabled && !state.isAdmin) return;
+placements[ad.placement] = ad; // Last one wins for same placement
+});
+
+Object.keys(placements).forEach(placement => {
+const ad = placements[placement];
+const slot = document.getElementById(`ad-${placement}`);
+if (slot) {
+app.injectAd(slot, ad);
+}
+});
+},
+
+injectAd: (container, ad) => {
+container.classList.add("filled");
+container.innerHTML = "";
+// Wrap in try-catch to prevent site crash
+try {
+if (ad.network === 'admob') {
+const ins = document.createElement("ins");
+ins.className = "adsbygoogle";
+ins.style.display = "block";
+ins.setAttribute("data-ad-client", ad.adClient || "");
+ins.setAttribute("data-ad-slot", ad.adSlot || "");
+ins.setAttribute("data-ad-format", "auto");
+ins.setAttribute("data-full-width-responsive", "true");
+container.appendChild(ins);
+
+// Trigger adsbygoogle push
+const script = document.createElement("script");
+script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({});";
+container.appendChild(script);
+
+} else if (ad.network === 'custom') {
+// Create a safe container for custom script
+const wrapper = document.createElement("div");
+// Use a range to insert HTML to execute some scripts, but mostly we need to manually recreate script tags
+wrapper.innerHTML = ad.adScript || "";
+
+// Execute scripts found in the HTML
+const scripts = wrapper.querySelectorAll("script");
+// Append non-script content first
+Array.from(wrapper.childNodes).forEach(node => {
+if (node.tagName !== 'SCRIPT') container.appendChild(node.cloneNode(true));
+});
+
+// Run scripts
+scripts.forEach(oldScript => {
+const newScript = document.createElement("script");
+Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+container.appendChild(newScript);
+});
+}
+} catch (e) {
+console.error("Ad injection failed", e);
+container.innerHTML = "<div class='text-xs text-slate-300'>Ad Error</div>";
+}
+},
+
+toggleAdFields: () => {
+const type = document.getElementById("ad-network-select").value;
+if (type === 'admob') {
+document.getElementById("ad-fields-google").classList.remove("hidden");
+document.getElementById("ad-fields-custom").classList.add("hidden");
+} else {
+document.getElementById("ad-fields-google").classList.add("hidden");
+document.getElementById("ad-fields-custom").classList.remove("hidden");
+}
+},
+
+openAdEditor: (id = null) => {
+const form = document.getElementById("ad-form");
+form.reset();
+form.id.value = "";
+document.getElementById("ad-delete-btn").classList.add("hidden");
+app.toggleAdFields(); // reset to default
+
+if (id) {
+const ad = state.ads.find(a => a.id === id);
+if (ad) {
+form.id.value = ad.id;
+form.placement.value = ad.placement;
+form.network.value = ad.network;
+form.adClient.value = ad.adClient || "";
+form.adSlot.value = ad.adSlot || "";
+form.adScript.value = ad.adScript || "";
+form.enabled.checked = ad.enabled;
+document.getElementById("ad-delete-btn").classList.remove("hidden");
+app.toggleAdFields();
+}
+}
+app.openModal("adEditor");
+},
+
+saveAd: async (e) => {
+e.preventDefault();
+const f = e.target;
+const data = {
+placement: f.placement.value,
+network: f.network.value,
+adClient: f.adClient.value,
+adSlot: f.adSlot.value,
+adScript: f.adScript.value,
+enabled: f.enabled.checked,
+updatedAt: serverTimestamp()
+};
+
+try {
+if (f.id.value) {
+await updateDoc(doc(db, "ads", f.id.value), data);
+showToast("Ad Updated");
+} else {
+data.createdAt = serverTimestamp();
+await addDoc(collection(db, "ads"), data);
+showToast("Ad Created");
+}
+app.closeModals();
+} catch (err) {
+showToast(err.message, "error");
+}
+},
+
+deleteAd: async () => {
+const id = document.querySelector('#ad-form input[name="id"]').value;
+if (!id || !confirm("Delete this ad unit?")) return;
+try {
+await deleteDoc(doc(db, "ads", id));
+showToast("Ad Deleted");
+app.closeModals();
+} catch (err) {
+showToast(err.message, "error");
+}
+},
+
+renderAdminAdsTable: () => {
+const tbody = els.admin.adsBody;
+tbody.innerHTML = "";
+state.ads.forEach(ad => {
+const tr = document.createElement("tr");
+tr.className = "hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-700";
+const status = ad.enabled ? '<span class="text-green-600 font-bold">Active</span>' : '<span class="text-slate-400">Disabled</span>';
+tr.innerHTML = `
+<td class="p-4 font-bold capitalize">${ad.placement.replace("_", " ")}</td>
+<td class="p-4 capitalize">${ad.network}</td>
+<td class="p-4">${status}</td>
+<td class="p-4 text-xs font-mono text-slate-500">${ad.id}</td>
+<td class="p-4 text-right"><button onclick="app.openAdEditor('${ad.id}')" class="text-blue-600 hover:underline">Edit</button></td>
+`;
+tbody.appendChild(tr);
+});
 },
 
 // --- INSIDER DEALS LOGIC ---
@@ -1541,6 +1830,7 @@ els.admin.publicView.classList.add("hidden");
 window.scrollTo(0, 0);
 app.renderAdminTable();
 app.renderAdminDealsTable(); // Render deals tab too
+app.renderAdminAdsTable(); // Render ads tab
 app.populateNotifDropdown();
 },
 
@@ -1872,5 +2162,3 @@ app.init();
 </script>
 </body>
 </html>
-
-
